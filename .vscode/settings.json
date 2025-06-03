@@ -1,0 +1,20 @@
+{
+  "tailwindCSS.classAttributes": [
+    "class", 
+    "className", 
+    "style", 
+    ".*Style",
+    "enter",
+    "enterFrom",
+    "enterTo",
+    "leave",
+    "leaveFrom",
+    "leaveTo"
+  ],
+  "tailwindCSS.includeLanguages": {
+    "javascript": "javascript",
+    "typescript": "typescript",
+    "javascriptreact": "javascriptreact",
+    "typescriptreact": "typescriptreact"
+  }
+}
