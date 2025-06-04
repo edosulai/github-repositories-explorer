@@ -2,12 +2,15 @@ import "@testing-library/jest-dom";
 import { fireEvent, render, screen } from "@testing-library/react";
 import { Input } from "./input.atoms";
 
+// Test suite for Input component
 describe("Input Component", () => {
+  // Test case: Component renders with placeholder
   it("renders input with placeholder", () => {
     render(<Input placeholder="Search..." />);
     expect(screen.getByPlaceholderText("Search...")).toBeInTheDocument();
   });
 
+  // Test case: Component handles value changes correctly
   it("handles value changes", () => {
     const onChangeMock = jest.fn();
     render(<Input value="" onChange={onChangeMock} />);
@@ -18,12 +21,14 @@ describe("Input Component", () => {
     expect(onChangeMock).toHaveBeenCalled();
   });
 
+  // Test case: Component applies custom classes
   it("applies custom className properly", () => {
     render(<Input className="custom-class" />);
     const input = screen.getByRole("textbox");
     expect(input).toHaveClass("custom-class");
   });
 
+  // Test cases for various input states and attributes
   it("handles disabled state", () => {
     render(<Input disabled />);
     const input = screen.getByRole("textbox");

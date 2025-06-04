@@ -2,9 +2,9 @@
 
 import {
   Accordion,
-  Input,
   Loading,
   RepoModal,
+  SearchForm,
   UserAccordionItem,
 } from "@/components";
 import { useRepoReadme, useUsers } from "@/hooks";
@@ -12,22 +12,22 @@ import { UserUsersFormData, usersSchema } from "@/schemas";
 import { GitHubRepository, GitHubUser } from "@/types";
 import { Transition } from "@headlessui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
-import { FormProvider, useForm } from "react-hook-form";
+import { Suspense, useState } from "react";
+import { useForm } from "react-hook-form";
 
 export default function Home() {
   const methods = useForm<UserUsersFormData>({
     resolver: zodResolver(usersSchema),
   });
 
-  const { register, watch } = methods;
+  const { watch } = methods;
   const username = watch("username");
 
   const {
     data: usersData,
     error: usersError,
     isLoading: isUsersLoading,
-  } = useUsers(username);
+  } = useUsers(username, 5);
 
   const [selectedRepo, setSelectedRepo] = useState<GitHubRepository | null>(
     null
@@ -54,9 +54,9 @@ export default function Home() {
 
   return (
     <main className="min-h-screen p-8 pb-20 lg:p-20 dark:bg-[#111827b3] dark:text-white/70">
-      <FormProvider {...methods}>
-        <Input {...register("username")} placeholder="Search by name" />
-      </FormProvider>
+      <Suspense fallback={<Loading />}>
+        <SearchForm methods={methods} />
+      </Suspense>
       {isUsersLoading && <Loading />}
       {usersError && (
         <p className="text-center text-red-500">{usersError.message}</p>

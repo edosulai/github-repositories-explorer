@@ -11,7 +11,9 @@ jest.mock("@/services", () => {
   };
 });
 
+// Test suite for useUsers custom hook
 describe("useUsers", () => {
+  // Setup QueryClient for testing
   const queryClient = new QueryClient({
     defaultOptions: {
       queries: {
@@ -20,17 +22,20 @@ describe("useUsers", () => {
     },
   });
 
+  // Setup test wrapper with QueryClientProvider
   const wrapper = ({ children }: { children: React.ReactNode }) =>
     QueryClientProvider({
       client: queryClient,
       children,
     });
 
+  // Reset state before each test
   beforeEach(() => {
     queryClient.clear();
     jest.clearAllMocks();
   });
 
+  // Test case: Hook should fetch and return users data
   it("fetches users data when query is provided", async () => {
     const mockData = {
       items: [
@@ -57,6 +62,6 @@ describe("useUsers", () => {
     });
 
     expect(result.current.data).toEqual(mockData);
-    expect(githubServices.getUsers).toHaveBeenCalledWith("octocat");
+    expect(githubServices.getUsers).toHaveBeenCalledWith("octocat", undefined);
   });
 });

@@ -1,3 +1,7 @@
+/**
+ * Represents the basic profile information of a GitHub user
+ * Contains essential user data like login, avatar, and various API URLs
+ */
 export interface GitHubProfile {
   login: string;
   id: number;
@@ -19,6 +23,11 @@ export interface GitHubProfile {
   site_admin: boolean;
 }
 
+/**
+ * Extends GitHubProfile with additional user details
+ * Contains more detailed information about a GitHub user like name, company, bio, etc.
+ * This interface is used when displaying full user information
+ */
 export interface GitHubUser extends GitHubProfile {
   user_view_type: string;
   name: string;
@@ -37,6 +46,10 @@ export interface GitHubUser extends GitHubProfile {
   updated_at: string;
 }
 
+/**
+ * Represents a GitHub repository with its complete information
+ * Contains all repository metadata, statistics, and related API URLs
+ */
 export interface GitHubRepository {
   id: number;
   node_id: string;
@@ -104,6 +117,10 @@ export interface GitHubRepository {
   default_branch: string;
 }
 
+/**
+ * Represents the structure of a GitHub repository's README file
+ * Contains file metadata and the actual content of the README
+ */
 export interface GitHubREADME {
   name: string;
   path: string;
@@ -123,6 +140,10 @@ export interface GitHubREADME {
   };
 }
 
+/**
+ * Represents the response structure when searching for GitHub users
+ * Contains the search results along with pagination information
+ */
 export interface GitHubUserSearchResult {
   total_count: number;
   incomplete_results: boolean;

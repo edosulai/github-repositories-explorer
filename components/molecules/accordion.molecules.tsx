@@ -22,6 +22,19 @@ interface AccordionProps {
   children: React.ReactNode;
 }
 
+/**
+ * Accordion container component that manages the state of accordion items
+ * @param {object} props - Component props
+ * @param {"single" | "multiple"} [props.type="single"] - Accordion type
+ * @param {boolean} [props.collapsible=false] - Whether items can be collapsed
+ * @param {string} [props.className] - Additional CSS classes
+ * @param {React.ReactNode} props.children - Child elements
+ * @returns {JSX.Element} - Accordion container
+ * @example
+ * <Accordion type="single" collapsible>
+ *   <AccordionItem value="item-1">...</AccordionItem>
+ * </Accordion>
+ */
 export function Accordion({
   type = "single",
   collapsible = false,
@@ -62,6 +75,14 @@ interface AccordionItemProps {
   className?: string;
 }
 
+/**
+ * Individual accordion item component
+ * @param {object} props - Component props
+ * @param {string} props.value - Unique identifier for the item
+ * @param {React.ReactNode} props.children - Child elements
+ * @param {string} [props.className] - Additional CSS classes
+ * @returns {JSX.Element} - Accordion item
+ */
 export function AccordionItem({
   value,
   children,
@@ -81,6 +102,13 @@ interface AccordionTriggerProps {
   className?: string;
 }
 
+/**
+ * Accordion trigger button component
+ * @param {object} props - Component props
+ * @param {React.ReactNode} props.children - Child elements
+ * @param {string} [props.className] - Additional CSS classes
+ * @returns {JSX.Element} - Trigger button
+ */
 export function AccordionTrigger({
   children,
   className,
@@ -120,6 +148,13 @@ interface AccordionContentProps {
   className?: string;
 }
 
+/**
+ * Accordion content component with animation
+ * @param {object} props - Component props
+ * @param {React.ReactNode} props.children - Child elements
+ * @param {string} [props.className] - Additional CSS classes
+ * @returns {JSX.Element} - Animated content container
+ */
 export function AccordionContent({
   children,
   className,

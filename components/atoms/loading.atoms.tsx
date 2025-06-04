@@ -1,5 +1,11 @@
 import { ArrowPathIcon } from "@heroicons/react/24/solid";
 
+/**
+ * Loading spinner component
+ * @returns {JSX.Element} - Animated loading spinner
+ * @example
+ * <Loading />
+ */
 export function Loading() {
   return (
     <div

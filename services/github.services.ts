@@ -60,14 +60,17 @@ export async function getRepoReadme(username: string, repo: string) {
  * Search GitHub users
  * Endpoint: GET /search/users?q={query}
  * @param {string} q - Search query
+ * @param {number} [per_page] - Number of results per page
  * @returns {Promise<GitHubUserSearchResult>} - Search result
  * @throws {Error} - If the request fails
  * @example
  * getUsers('john in:login').then(result => console.log(result));
  */
-export async function getUsers(q: string) {
-  const response = await restClient.get<GitHubUserSearchResult>(
-    `/search/users?q=${encodeURIComponent(q)}`
-  );
+export async function getUsers(q: string, per_page?: number) {
+  let url = `/search/users?q=${encodeURIComponent(q)}`;
+  if (per_page) {
+    url += `&per_page=${per_page}`;
+  }
+  const response = await restClient.get<GitHubUserSearchResult>(url);
   return response.data;
 }

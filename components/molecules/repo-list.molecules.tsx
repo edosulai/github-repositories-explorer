@@ -13,6 +13,22 @@ interface RepoListProps {
   selectedRepo: GitHubRepository | null;
 }
 
+/**
+ * Repository list component that displays GitHub repositories
+ * @param {object} props - Component props
+ * @param {GitHubRepository[]} props.data - Array of repository data
+ * @param {(repo: GitHubRepository) => void} props.handleRepoClick - Click handler for repositories
+ * @param {boolean} props.isReadmeLoading - Loading state for README content
+ * @param {GitHubRepository | null} props.selectedRepo - Currently selected repository
+ * @returns {JSX.Element} - List of repository items
+ * @example
+ * <RepoList
+ *   data={repositories}
+ *   handleRepoClick={handleClick}
+ *   isReadmeLoading={loading}
+ *   selectedRepo={selected}
+ * />
+ */
 export function RepoList({
   data,
   handleRepoClick,

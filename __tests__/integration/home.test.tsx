@@ -2,26 +2,44 @@ import { server } from "@/__mocks__/server";
 import Home from "@/app/page";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import "@testing-library/jest-dom";
-import {
-  act,
-  fireEvent,
-  render,
-  screen,
-  waitFor,
-} from "@testing-library/react";
-import { mockAnimationsApi } from "jsdom-testing-mocks"; 
+import { act, fireEvent, render, screen } from "@testing-library/react";
+import { mockAnimationsApi } from "jsdom-testing-mocks";
 
 mockAnimationsApi();
 
+// Mock RepoModal
 jest.mock("@/components/molecules/repo-modal.molecules", () => ({
   RepoModal: () => <div data-testid="mocked-repo-modal">Mocked Modal</div>,
 }));
 
+// Mock Router & Search Params
+const mockPush = jest.fn();
+const mockSearchParams = new URLSearchParams(); // global mock
+
+jest.mock("next/navigation", () => ({
+  useRouter() {
+    return {
+      route: "/",
+      pathname: "",
+      query: {},
+      asPath: "",
+      push: mockPush,
+      events: {
+        on: jest.fn(),
+        off: jest.fn(),
+      },
+      beforePopState: jest.fn(),
+      prefetch: jest.fn(),
+    };
+  },
+  useSearchParams() {
+    return mockSearchParams;
+  },
+}));
+
 const queryClient = new QueryClient({
   defaultOptions: {
-    queries: {
-      retry: false,
-    },
+    queries: { retry: false },
   },
 });
 
@@ -31,48 +49,61 @@ const renderWithClient = (ui: React.ReactElement) => {
   );
 };
 
-describe("Home Page", () => {
-
+describe("Home Page Integration", () => {
   beforeAll(() => server.listen());
 
   afterEach(() => {
     server.resetHandlers();
     queryClient.clear();
+    mockSearchParams.set("q", ""); // reset after each test
+    mockPush.mockClear();
   });
 
   afterAll(() => server.close());
 
   it("renders search input", async () => {
     renderWithClient(<Home />);
-    const input = await screen.findByPlaceholderText("Search by name");
+    const input = await screen.findByPlaceholderText(
+      "Search by name",
+      {},
+      { timeout: 3000 }
+    );
     expect(input).toBeInTheDocument();
   });
 
   it("displays results when searching for octocat", async () => {
     renderWithClient(<Home />);
-    const input = screen.getByPlaceholderText("Search by name");
+    const input = await screen.findByPlaceholderText("Search by name");
 
     await act(async () => {
       fireEvent.change(input, { target: { value: "octocat" } });
     });
 
-
-    const octocatResult = await screen.findByText("octocat");
+    const octocatResult = await screen.findByText(
+      "octocat",
+      {},
+      { timeout: 5000 }
+    );
     expect(octocatResult).toBeInTheDocument();
   });
 
   it("handles user search and displays repositories", async () => {
     renderWithClient(<Home />);
 
-    expect(screen.getByText("Type Something ...")).toBeInTheDocument();
+    expect(
+      await screen.findByText("Type Something ...", {}, { timeout: 3000 })
+    ).toBeInTheDocument();
 
-    const searchInput = screen.getByPlaceholderText("Search by name");
+    const input = await screen.findByPlaceholderText("Search by name");
+
     await act(async () => {
-      fireEvent.change(searchInput, { target: { value: "octocat" } });
+      fireEvent.change(input, { target: { value: "octocat" } });
     });
 
-    const octocatResult = await waitFor(
-      () => screen.findByText("octocat")
+    const octocatResult = await screen.findByText(
+      "octocat",
+      {},
+      { timeout: 5000 }
     );
     expect(octocatResult).toBeInTheDocument();
 
@@ -80,8 +111,10 @@ describe("Home Page", () => {
       fireEvent.click(octocatResult);
     });
 
-    const helloWorldRepo = await waitFor(
-      () => screen.findByText("Hello-World")
+    const helloWorldRepo = await screen.findByText(
+      "Hello-World",
+      {},
+      { timeout: 5000 }
     );
     expect(helloWorldRepo).toBeInTheDocument();
   });

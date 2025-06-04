@@ -32,6 +32,24 @@ interface RepoModalProps {
   toggleRepoDetails: () => void;
 }
 
+/**
+ * Modal component for displaying repository details and README
+ * @param {object} props - Component props
+ * @param {GitHubRepository} props.selectedRepo - Repository to display
+ * @param {string} props.readmeContent - Repository README content
+ * @param {() => void} props.closeModal - Function to close the modal
+ * @param {boolean} props.isRepoDetailsOpen - Whether repository details are expanded
+ * @param {() => void} props.toggleRepoDetails - Function to toggle details visibility
+ * @returns {JSX.Element} - Modal with repository information
+ * @example
+ * <RepoModal
+ *   selectedRepo={repo}
+ *   readmeContent={readme}
+ *   closeModal={handleClose}
+ *   isRepoDetailsOpen={isOpen}
+ *   toggleRepoDetails={toggleDetails}
+ * />
+ */
 export function RepoModal({
   selectedRepo,
   readmeContent,

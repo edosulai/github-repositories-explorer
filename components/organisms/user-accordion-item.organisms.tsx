@@ -16,6 +16,22 @@ interface UserAccordionItemProps {
   handleRepoClick: (repo: GitHubRepository) => void;
 }
 
+/**
+ * Accordion item component for displaying user information and repositories
+ * @param {object} props - Component props
+ * @param {GitHubUser} props.user - GitHub user data
+ * @param {boolean} props.isReadmeLoading - Loading state for README content
+ * @param {GitHubRepository | null} props.selectedRepo - Currently selected repository
+ * @param {(repo: GitHubRepository) => void} props.handleRepoClick - Click handler for repositories
+ * @returns {JSX.Element} - Accordion item with user info and repositories
+ * @example
+ * <UserAccordionItem
+ *   user={githubUser}
+ *   isReadmeLoading={loading}
+ *   selectedRepo={selected}
+ *   handleRepoClick={handleClick}
+ * />
+ */
 export function UserAccordionItem({
   user,
   isReadmeLoading,
