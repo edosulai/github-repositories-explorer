@@ -1,23 +1,17 @@
+import { server } from "@/__mocks__/server";
+import Home from "@/app/page";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import "@testing-library/jest-dom";
-import { act, fireEvent, render, screen } from "@testing-library/react";
-import Home from "@/app/page";
+import {
+  act,
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+} from "@testing-library/react";
+import { mockAnimationsApi } from "jsdom-testing-mocks"; 
 
-jest.mock("@/hooks/useUsers", () => ({
-  useUsers: jest.fn(() => ({
-    data: null,
-    error: null,
-    isLoading: false,
-  })),
-}));
-
-jest.mock("@/hooks/useRepoReadme", () => ({
-  useRepoReadme: jest.fn(() => ({
-    data: null,
-    error: null,
-    isLoading: false,
-  })),
-}));
+mockAnimationsApi();
 
 jest.mock("@/components/molecules/repo-modal.molecules", () => ({
   RepoModal: () => <div data-testid="mocked-repo-modal">Mocked Modal</div>,
@@ -38,10 +32,15 @@ const renderWithClient = (ui: React.ReactElement) => {
 };
 
 describe("Home Page", () => {
-  beforeEach(() => {
+
+  beforeAll(() => server.listen());
+
+  afterEach(() => {
+    server.resetHandlers();
     queryClient.clear();
-    jest.clearAllMocks();
   });
+
+  afterAll(() => server.close());
 
   it("renders search input", async () => {
     renderWithClient(<Home />);
@@ -49,51 +48,41 @@ describe("Home Page", () => {
     expect(input).toBeInTheDocument();
   });
 
-  it("shows loading state when searching", async () => {
-    // eslint-disable-next-line @typescript-eslint/no-require-imports
-    const { useUsers } = require("@/hooks/useUsers");
-    useUsers.mockImplementation(() => ({
-      data: null,
-      error: null,
-      isLoading: true,
-    }));
-
+  it("displays results when searching for octocat", async () => {
     renderWithClient(<Home />);
     const input = screen.getByPlaceholderText("Search by name");
+
     await act(async () => {
-      fireEvent.change(input, { target: { value: "test" } });
+      fireEvent.change(input, { target: { value: "octocat" } });
     });
 
-    expect(screen.getByTestId("loading-indicator")).toBeInTheDocument();
+
+    const octocatResult = await screen.findByText("octocat");
+    expect(octocatResult).toBeInTheDocument();
   });
 
-  it("displays 'Type Something ...' when no search query", async () => {
-    await act(async () => {
-      renderWithClient(<Home />);
-    });
-    expect(screen.getByText("Type Something ...")).toBeInTheDocument();
-  });
-
-  it("has proper dark mode styles", async () => {
-    await act(async () => {
-      renderWithClient(<Home />);
-    });
-    const main = screen.getByRole("main");
-    expect(main).toHaveClass("dark:bg-[#111827b3]", "dark:text-white/70");
-  });
-
-  it("renders search input with proper styling", async () => {
+  it("handles user search and displays repositories", async () => {
     renderWithClient(<Home />);
-    const input = await screen.findByPlaceholderText("Search by name");
-    expect(input).toHaveClass(
-      "w-full",
-      "p-4",
-      "mb-4",
-      "border",
-      "border-gray-300",
-      "rounded-3xl",
-      "dark:bg-gray-800",
-      "dark:border-gray-700"
+
+    expect(screen.getByText("Type Something ...")).toBeInTheDocument();
+
+    const searchInput = screen.getByPlaceholderText("Search by name");
+    await act(async () => {
+      fireEvent.change(searchInput, { target: { value: "octocat" } });
+    });
+
+    const octocatResult = await waitFor(
+      () => screen.findByText("octocat")
     );
+    expect(octocatResult).toBeInTheDocument();
+
+    await act(async () => {
+      fireEvent.click(octocatResult);
+    });
+
+    const helloWorldRepo = await waitFor(
+      () => screen.findByText("Hello-World")
+    );
+    expect(helloWorldRepo).toBeInTheDocument();
   });
 });

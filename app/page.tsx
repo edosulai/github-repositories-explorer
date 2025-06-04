@@ -8,7 +8,7 @@ import {
   UserAccordionItem,
 } from "@/components";
 import { useRepoReadme, useUsers } from "@/hooks";
-import { UserReposFormData, userReposSchema } from "@/schemas";
+import { UserUsersFormData, usersSchema } from "@/schemas";
 import { GitHubRepository, GitHubUser } from "@/types";
 import { Transition } from "@headlessui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -16,8 +16,8 @@ import { useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 
 export default function Home() {
-  const methods = useForm<UserReposFormData>({
-    resolver: zodResolver(userReposSchema),
+  const methods = useForm<UserUsersFormData>({
+    resolver: zodResolver(usersSchema),
   });
 
   const { register, watch } = methods;
