@@ -35,7 +35,9 @@ export function UserAccordionItem({
           <Image
             src={user.avatar_url}
             alt={user.login}
-            className="w-6 h-6 rounded-full"
+            width={24}
+            height={24}
+            className="rounded-full"
           />
           <span>{user.login}</span>
         </div>
