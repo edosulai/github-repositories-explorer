@@ -1,7 +1,12 @@
 "use client";
 
-import { Accordion, Input, Loading, RepoModal } from "@/components";
-import { UserAccordionItem } from "@/components/organisms/user-accordion-item.organisms";
+import {
+  Accordion,
+  Input,
+  Loading,
+  RepoModal,
+  UserAccordionItem,
+} from "@/components";
 import { useRepoReadme, useUsers } from "@/hooks";
 import { UserReposFormData, userReposSchema } from "@/schemas";
 import { GitHubRepository, GitHubUser } from "@/types";

@@ -71,7 +71,6 @@ describe("Input Component", () => {
     render(<Input className="additional-class" />);
     const input = screen.getByRole("textbox");
 
-    // Check both default and custom classes exist
     expect(input).toHaveClass("w-full");
     expect(input).toHaveClass("p-4");
     expect(input).toHaveClass("mb-4");
